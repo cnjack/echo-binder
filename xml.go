@@ -8,7 +8,7 @@ import (
 type xmlBinder struct{}
 
 func (xmlBinder) Bind(obj interface{}, c echo.Context) error {
-	decoder := xml.NewDecoder(c.Request().Body())
+	decoder := xml.NewDecoder(c.Request().Body)
 	if err := decoder.Decode(obj); err != nil {
 		return err
 	}

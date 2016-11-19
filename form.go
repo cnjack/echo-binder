@@ -19,7 +19,12 @@ func (formBinder) Bind(obj interface{}, c echo.Context) error {
 }
 
 func (formPostBinder) Bind(obj interface{}, c echo.Context) error {
-	if err := bindData(obj, c.FormParams()); err != nil {
+	params, err := c.FormParams()
+	c.MultipartForm()
+	if err != nil {
+		return err
+	}
+	if err := bindData(obj, params); err != nil {
 		return err
 	}
 	xssFilter(obj)

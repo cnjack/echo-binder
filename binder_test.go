@@ -3,10 +3,11 @@ package binder_test
 import (
 	"github.com/cnjack/echo-binder"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/test"
 	"github.com/stretchr/testify/assert"
 	"strings"
+	"net/http/httptest"
 	"testing"
+	"net/http"
 	"fmt"
 )
 
@@ -30,8 +31,8 @@ var (
 
 func TestFormBinder_Bind(t *testing.T) {
 	e := echo.New()
-	rec := test.NewResponseRecorder()
-	req := test.NewRequest("GET", "/?" + form, strings.NewReader(""))
+	rec := httptest.NewRecorder()
+	req, _ := http.NewRequest(echo.GET, "/?" + form, nil)
 	c := e.NewContext(req, rec)
 	b := binder.NewBinder(c)
 	var user User
@@ -45,10 +46,10 @@ func TestFormBinder_Bind(t *testing.T) {
 
 func TestFormPostBinder_Bind(t *testing.T) {
 	e := echo.New()
-	rec := test.NewResponseRecorder()
-	req := test.NewRequest("POST", "/", strings.NewReader(form))
+	rec := httptest.NewRecorder()
+	req,_ := http.NewRequest(echo.POST, "/", strings.NewReader(form))
 	c := e.NewContext(req, rec)
-	req.Header().Set(echo.HeaderContentType, "application/x-www-form-urlencoded")
+	req.Header.Set(echo.HeaderContentType, "application/x-www-form-urlencoded")
 	b := binder.NewBinder(c)
 	var user User
 	err := b.Bind(&user, c)
@@ -61,10 +62,10 @@ func TestFormPostBinder_Bind(t *testing.T) {
 
 func TestXmlBinder_Bind(t *testing.T) {
 	e := echo.New()
-	rec := test.NewResponseRecorder()
-	req := test.NewRequest("POST", "/", strings.NewReader(xml))
+	rec := httptest.NewRecorder()
+	req ,_:= http.NewRequest("POST", "/", strings.NewReader(xml))
 	c := e.NewContext(req, rec)
-	req.Header().Set(echo.HeaderContentType, "application/xml")
+	req.Header.Set(echo.HeaderContentType, "application/xml")
 	b := binder.NewBinder(c)
 	var user User
 	err := b.Bind(&user, c)
@@ -77,10 +78,10 @@ func TestXmlBinder_Bind(t *testing.T) {
 
 func TestJsonBinder_Bind(t *testing.T) {
 	e := echo.New()
-	rec := test.NewResponseRecorder()
-	req := test.NewRequest("POST", "/", strings.NewReader(json))
+	rec := httptest.NewRecorder()
+	req,_ := http.NewRequest("POST", "/", strings.NewReader(json))
 	c := e.NewContext(req, rec)
-	req.Header().Set(echo.HeaderContentType, "application/json")
+	req.Header.Set(echo.HeaderContentType, "application/json")
 	b := binder.NewBinder(c)
 	var user User
 	err := b.Bind(&user, c)
@@ -93,10 +94,10 @@ func TestJsonBinder_Bind(t *testing.T) {
 
 func TestXssBinder_Bind(t *testing.T) {
 	e := echo.New()
-	rec := test.NewResponseRecorder()
-	req := test.NewRequest("POST", "/", strings.NewReader(xss))
+	rec := httptest.NewRecorder()
+	req,_ := http.NewRequest("POST", "/", strings.NewReader(xss))
 	c := e.NewContext(req, rec)
-	req.Header().Set(echo.HeaderContentType, "application/json")
+	req.Header.Set(echo.HeaderContentType, "application/json")
 	b := binder.NewBinder(c)
 	var x Xss
 	err := b.Bind(&x, c)

@@ -9,7 +9,7 @@ import (
 type protobufBinder struct{}
 
 func (protobufBinder) Bind(obj interface{}, c echo.Context) error {
-	buf, err := ioutil.ReadAll(c.Request().Body())
+	buf, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
 		return err
 	}

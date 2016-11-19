@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/cnjack/echo-binder"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 	"net/http"
 )
 
@@ -30,5 +29,5 @@ func main() {
 		}
 		return c.String(http.StatusOK, "Hello, "+u.Name)
 	})
-	e.Run(standard.New(":1314"))
+	e.Logger.Fatal(e.Start(":1323"))
 }

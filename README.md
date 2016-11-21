@@ -6,7 +6,7 @@ echo-binder 一个提供echo中数据binder和validator功能的middleware
  - 完善注入方式
 
 ## Update
-- 20161120 升级到支持echo v2 版本
+- 20161120 升级到支持echo v2 版本(可以通过tag切换版本 master上为version2.0)
 - 20161018 使用[bluemonday](github.com/microcosm-cc/bluemonday)添加xss过滤,使用方式详见test TestXssBinder_Bind
 
 

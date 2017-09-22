@@ -17,7 +17,7 @@ echo-binder 一个提供echo中数据binder和validator功能的middleware
 $ go get -u github.com/cnjack/echo-binder
 ```
 ### Hello, World!
-```
+```go
 package main
 
 import (

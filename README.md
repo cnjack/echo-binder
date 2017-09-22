@@ -21,10 +21,9 @@ $ go get -u github.com/cnjack/echo-binder
 package main
 
 import (
-	"net/http"
-	"github.com/labstack/echo"
 	"github.com/cnjack/echo-binder"
-	"github.com/labstack/echo/engine/standard"
+	"github.com/labstack/echo"
+	"net/http"
 )
 
 type User struct {
@@ -41,10 +40,18 @@ func main() {
 		if err := c.Bind(&u); err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 		}
-		return c.String(http.StatusOK, "Hello, " + u.Name)
+		return c.String(http.StatusOK, "Hello, "+u.Name)
+	})
+	e.GET("/", func(c echo.Context) error {
+		var u User
+		if err := c.Bind(&u); err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+		}
+		return c.String(http.StatusOK, "Hello, "+u.Name)
 	})
 	e.Logger.Fatal(e.Start(":1323"))
 }
+
 ```
 
 ## form interface EXAMPLE

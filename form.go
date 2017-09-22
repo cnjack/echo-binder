@@ -1,10 +1,12 @@
 package binder
 
 import (
+	"encoding"
 	"errors"
-	"github.com/labstack/echo"
 	"reflect"
 	"strconv"
+
+	"github.com/labstack/echo"
 )
 
 type formBinder struct{}
@@ -84,6 +86,9 @@ func bindData(ptr interface{}, data map[string][]string) error {
 }
 
 func setWithProperType(valueKind reflect.Kind, val string, structField reflect.Value) error {
+	if m, err := setUnknownField(val, structField); m {
+		return err
+	}
 	switch valueKind {
 	case reflect.Int:
 		return setIntField(val, 0, structField)
@@ -117,6 +122,30 @@ func setWithProperType(valueKind reflect.Kind, val string, structField reflect.V
 		return errors.New("unknown type")
 	}
 	return nil
+}
+
+type Unmarshaler interface {
+	UnmarshalForm(text string) error
+}
+
+func setUnknownField(val string, field reflect.Value) (match bool, err error) {
+	match = true
+	if field.Kind() != reflect.Ptr && field.Type().Name() != "" && field.CanAddr() {
+		field = field.Addr()
+	}
+	if field.IsNil() {
+		field.Set(reflect.New(field.Type().Elem()))
+	}
+	if u, ok := field.Interface().(encoding.TextUnmarshaler); ok {
+		err = u.UnmarshalText([]byte(val))
+		return
+	}
+	if u, ok := field.Interface().(Unmarshaler); ok {
+		err = u.UnmarshalForm(val)
+		return
+	}
+	match = false
+	return
 }
 
 func setIntField(value string, bitSize int, field reflect.Value) error {
